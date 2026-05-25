@@ -1,8 +1,8 @@
-AI Assistant — v0.1
+# AI Assistant — v0.1
 
 v0.1 scope is: "user can sign up, log in, start a conversation, send messages, and see history"
 
-Features:
+## Features:
 1. User registration
 2. User login/logout
 3. Create conversation
@@ -10,7 +10,7 @@ Features:
 5. Assistant echoes message
 6. View conversation history
 
-Non Goals:
+## Non Goals:
 1. No LLM
 2. No file upload
 3. No streaming
@@ -21,41 +21,43 @@ Non Goals:
 8. No realtime updates
 9. No email verification
 
-Core Tables:
-users - id , first_name, last_name, email , password_hash , created_at , updated_at
-conversations - id , user_id , title , created_at , updated_at , deleted_at
-messages - id , conversation_id , role , content , created_at , updated_at , deleted_at
+## Core Tables:
+### users
+id , name, email , password_hash , created_at , updated_at
+### conversations
+id , user_id , title , created_at , updated_at , deleted_at
+### messages
+id , conversation_id , role , content , created_at , updated_at , deleted_at
 
-Indexes:
+## Indexes:
 - INDEX conversations(user_id)
 - INDEX messages(conversation_id)
 
-Testing Plan:
+## Testing Plan:
 Backend APIs will be tested using pytest and FastAPI TestClient with integration tests against a PostgreSQL test database.
 
-API Endpoints:
-Auth API Contract:
-POST /auth/register
+## API Endpoints:
+### POST /auth/register
 
-Purpose:
+### Purpose:
 Register a new user account.
 
-Request Schema:
+#### Request Schema:
 class RegisterUserRequest(BaseModel):
 	name: str
 	email: EmailStr
 	password: str
 
-Response Schema:
+#### Response Schema:
 class RegisterUserResponse(BaseModel):
 	id: UUID
 	email: EmailStr
 	created_at: datetime
 
-Success Response:
+#### Success Response:
 200 OK
 
-Possible Errors:
+#### Possible Errors:
 409 Conflict -> email already exists
 422 Validation Error -> invalid request schema
 500 Internal Server Error

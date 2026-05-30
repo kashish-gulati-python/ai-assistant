@@ -2,34 +2,27 @@ services:
   api:
     build: .
     container_name: ai-assistant-app
-
     ports:
       - "8000:8000"
-
     volumes:
       - ./app:/code/app
-
     depends_on:
       - postgres
-
     environment:
-      DATABASE_URL: postgresql+psycopg://postgres:password@postgres:5432/ai-assistant-db
-
+      # Docker Compose will combine these variables to build the string dynamically
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   postgres:
     image: postgres:16
-
     container_name: postgres_db
-
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: ai-assistant-db
-
+      # Docker Compose injects these directly from your local .env file
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

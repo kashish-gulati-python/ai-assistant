@@ -1,6 +1,6 @@
 ## Sprint 1: 1-June - 15 June tasks
 
-### 1. Database credentials printed to stdout on every startup
+### 1. Database credentials printed to stdout on every startup -- Done
 
 `backend/app/db/session.py`
 

@@ -1,6 +1,6 @@
 ## Sprint 1: 1-June - 15 June tasks
 
-### 1. Database credentials printed to stdout on every startup
+### 1. Database credentials printed to stdout on every startup -- Done
 
 `backend/app/db/session.py`
 
@@ -11,7 +11,7 @@ print(POSTGRES_DB_URL)   # ← password in every log line
 
 Remove the print entirely.
 
-### 2. All DateTime defaults are evaluated once at import time
+### 2. All DateTime defaults are evaluated once at import time -- Done
 
 `backend/app/models/user.py`
 
@@ -30,7 +30,7 @@ created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_def
 updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 ```
 
-### 3. No password validation — empty string is a valid password
+### 3. No password validation — empty string is a valid password -- Done
 
 `backend/app/schemas/auth.py`
 
@@ -54,7 +54,7 @@ def password_strength(cls, v: str) -> str:
     return v
 ```
 
-### 4. No input constraints on `name`
+### 4. No input constraints on `name` -- Done
 
 `backend/app/schemas/auth.py`
 

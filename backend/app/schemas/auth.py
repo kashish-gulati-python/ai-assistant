@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Annotated
 
 class RegisterUserRequest(BaseModel):
-    name: str = Annotated[str, StringConstraints(..., min_length=3, max_length=50, strip_whitespace=True)]
+    name: Annotated[str, StringConstraints(min_length=3, max_length=50, strip_whitespace=True)]
     email: EmailStr
     password: Annotated[str, Field(min_length=8, max_length=60)]
 
@@ -16,7 +16,7 @@ class RegisterUserRequest(BaseModel):
     @field_validator("password")
     @classmethod
     def password_strength(cls, value: str) -> str:
-        if not any(c.isupper() for c in value) or any(c.isdigit() for c in value):
+        if not any(c.isupper() for c in value) or not any(c.isdigit() for c in value):
           raise ValueError("Password must contain at least one uppercase letter and one digit")
         return value
     

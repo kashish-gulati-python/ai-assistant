@@ -1,12 +1,11 @@
-from pydantic import BaseModel, EmailStr, field_validator, Field, StringConstraints
+from pydantic import BaseModel, EmailStr
 from uuid import UUID
 from datetime import datetime
-from typing import Annotated
 
 class RegisterUserRequest(BaseModel):
     name: Annotated[str, StringConstraints(min_length=3, max_length=50, strip_whitespace=True)]
     email: EmailStr
-    password: Annotated[str, Field(min_length=8, max_length=60)]
+    password: str
 
     @field_validator("email")
     @classmethod

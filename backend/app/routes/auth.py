@@ -13,7 +13,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/register", response_model=RegisterUserResponse)
+@router.post("/register", response_model=RegisterUserResponse, status_code=201)
 def register(request: RegisterUserRequest, db: Session=Depends(get_db)):
     user = register_user(db, request)
     return RegisterUserResponse(id=user.id, email=user.email, created_at=user.created_at)

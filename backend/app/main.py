@@ -14,3 +14,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health", include_in_schema=False)
+async def health():
+    return {"status": "ok"}

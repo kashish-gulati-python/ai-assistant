@@ -9,5 +9,5 @@ POSTGRES_DB_URL = os.getenv("DATABASE_URL", "postgresql+psycopg://postgres:passw
 print(POSTGRES_DB_URL)
 engine = create_engine(url=POSTGRES_DB_URL)
 
-SessionLocal = sessionmaker(bind=engine, autoflush=False)
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 

@@ -12,7 +12,7 @@ Replace with a placeholder string that cannot pass connection validation:
 sqlalchemy.url = postgresql+psycopg://CHANGE_ME:CHANGE_ME@localhost:5432/CHANGE_ME
 ```
 
-### 2. POST /register returns 200 instead of 201
+### 2. POST /register returns 200 instead of 201 -- Done
 
 `backend/app/routes/auth.py`
 

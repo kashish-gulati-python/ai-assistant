@@ -12,6 +12,14 @@ class RegisterUserResponse(BaseModel):
     email: EmailStr
     created_at: datetime
 
+class LoginUserRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class LoginUserResponse(BaseModel):
+    access_token: str
+    token_type: str = "Bearer"
+
 class MeResponse(BaseModel):
     id: UUID
     name: str

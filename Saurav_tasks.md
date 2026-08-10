@@ -1,6 +1,6 @@
 ## Sprint 1: 1-June - 15 June tasks
 
-### 1. Hardcoded credentials committed to the repository
+### 1. Hardcoded credentials committed to the repository -- Done
 
 `backend/alembic.ini`
 
@@ -25,7 +25,7 @@ sqlalchemy.url = postgresql+psycopg://CHANGE_ME:CHANGE_ME@localhost:5432/CHANGE_
 ```
 `201 Created` must be returned when a new resource is created. Clients and API gateways key off status codes.
 
-### 3. Missing verify_password in security.py
+### 3. Missing verify_password in security.py -- Done
 
 `backend/app/core/security.py`
 

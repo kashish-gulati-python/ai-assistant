@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from app.schemas.auth import RegisterUserRequest, RegisterUserResponse
+from app.schemas.auth import RegisterUserRequest, LoginUserRequest
 from app.models.user import Users
-from app.core.security import decode_access_token, hash_password
+from app.core.security import create_access_token, decode_access_token, hash_password, verify_password
 from app.db.deps import get_db
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi import Depends, HTTPException, status
@@ -17,6 +17,15 @@ def register_user(db: Session, request: RegisterUserRequest) -> Users:
     db.commit()
     db.refresh(user)
     return user
+
+def get_user(db: Session, request: LoginUserRequest) -> Users:
+    user = db.query(Users).filter(Users.email == request.email).first()
+    if user is None:
+        raise HTTPException(status_code=401, detail="Invailid email or password")
+    if not verify_password(plain=request.password, hashed=user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    access_token = create_access_token(subject=str(user.id))
+    return {"access_token": access_token, "token_type": "bearer"}
 
 def get_users(db: Session):
     return db.query(Users).first()

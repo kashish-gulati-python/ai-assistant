@@ -3,8 +3,11 @@ from datetime import datetime, UTC, timedelta
 from jose import jwt, JWTError
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
 load_dotenv()
+BASE_DIR = Path(__file__).resolve().parents[2]   # backend/
+load_dotenv(BASE_DIR / ".env")
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 SECRET_KEY = os.environ["JWT_SECRET_KEY"]
@@ -14,6 +17,9 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
+
+def verify_password(plain: str, hashed: str) -> bool:
+    return pwd_context.verify(plain, hashed)
 
 def create_access_token(subject: str) -> str:
     expire = datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

@@ -1,6 +1,6 @@
 ## Sprint 1: 1-June - 15 June tasks
 
-### 1. Database credentials printed to stdout on every startup
+### 1. Database credentials printed to stdout on every startup -- Done
 
 `backend/app/db/session.py`
 
@@ -11,7 +11,7 @@ print(POSTGRES_DB_URL)   # ← password in every log line
 
 Remove the print entirely.
 
-### 2. All DateTime defaults are evaluated once at import time
+### 2. All DateTime defaults are evaluated once at import time -- Done
 
 `backend/app/models/user.py`
 

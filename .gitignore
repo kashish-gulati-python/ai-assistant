@@ -9,9 +9,13 @@ wheels/
 # Virtual environments
 .venv
 
+# My test files
+test.py
+
 # AI files
 CLAUDE.md 
 AGENTS.md
+.agents
 
 # Environment variables
 .env

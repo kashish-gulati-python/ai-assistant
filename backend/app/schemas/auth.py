@@ -3,10 +3,22 @@ from uuid import UUID
 from datetime import datetime
 
 class RegisterUserRequest(BaseModel):
-    name: str
+    name: Annotated[str, StringConstraints(min_length=3, max_length=50, strip_whitespace=True)]
     email: EmailStr
     password: str
 
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: EmailStr) -> str:
+        return value.lower()
+    
+    @field_validator("password")
+    @classmethod
+    def password_strength(cls, value: str) -> str:
+        if not any(c.isupper() for c in value) or not any(c.isdigit() for c in value):
+          raise ValueError("Password must contain at least one uppercase letter and one digit")
+        return value
+    
 class RegisterUserResponse(BaseModel):
     id: UUID
     email: EmailStr

@@ -20,7 +20,7 @@ class RegisterUserRequest(BaseModel):
         return value
     
 class RegisterUserResponse(BaseModel):
-    id: UUID
+    user_id: UUID
     email: EmailStr
     created_at: datetime
 
@@ -33,7 +33,7 @@ class LoginUserResponse(BaseModel):
     token_type: str = "Bearer"
 
 class MeResponse(BaseModel):
-    id: UUID
+    user_id: UUID
     name: str
     email: EmailStr
     created_at: datetime

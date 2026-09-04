@@ -23,11 +23,11 @@ v0.1 scope is: "user can sign up, log in, start a conversation, send messages, a
 
 ## Core Tables:
 ### users
-id , name, email , password_hash , created_at , updated_at
+user_id (PK) , name, email , password_hash , created_at , updated_at
 ### conversations
-id , user_id , title , created_at , updated_at , deleted_at
+conversation_id (PK) , user_id (FK) , title , created_at , updated_at , deleted_at
 ### messages
-id , conversation_id , role , content , created_at , updated_at , deleted_at
+message_id (PK) , conversation_id (FK) , role , content , created_at , updated_at , deleted_at
 
 ## Core Tables
 
@@ -62,7 +62,7 @@ class RegisterUserRequest(BaseModel):
 
 #### Response Schema:
 class RegisterUserResponse(BaseModel):
-	id: UUID
+	user_id: UUID
 	email: EmailStr
 	created_at: datetime
 
@@ -131,7 +131,7 @@ Accept: application/json
 
 ### Response Schema:
 class MeResponse(BaseModel):
-	id: UUID
+	user_id: UUID
 	name: str
 	email: EmailStr
 	name: str
@@ -158,7 +158,7 @@ class NewConversationRequest(BaseModel):
 
 ### Response Schema:
 class NewConversationResponse(BaseModel):
-	id: UUID
+	conversation_id: UUID
 	title: str
 	created_at: datetime
 
@@ -179,7 +179,7 @@ Retrieves the list of chat
 
 ### Response Schema:
 class ConversationResponse(BaseModel):
-	id: UUID
+	conversation_id: UUID
 	title: str
 	created_at: datetime
 

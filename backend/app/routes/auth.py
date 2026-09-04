@@ -17,6 +17,11 @@ def login(request: LoginUserRequest, db: Session=Depends(get_db)):
     user = get_user(db, request)
     return user
 
+@router.post("/login", response_model=LoginUserResponse)
+def login(request: LoginUserRequest, db: Session=Depends(get_db)):
+    user = get_user(db, request)
+    return user
+
 @router.get("/me", response_model=MeResponse)
 def retrieve(current_user: Users = Depends(get_current_user)):
     return MeResponse(

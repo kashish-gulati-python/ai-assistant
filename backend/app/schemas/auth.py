@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr
+from typing import Annotated
+from pydantic import BaseModel, EmailStr, StringConstraints, field_validator
 from uuid import UUID
 from datetime import datetime
 

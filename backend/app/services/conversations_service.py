@@ -9,3 +9,6 @@ def add_conversation(db: Session, request: NewConversationRequest, user_id):
     db.commit()
     db.refresh(conversation)
     return conversation
+
+def get_all_conversation(db: Session, user_id):
+    return db.query(Conversations).filter(Conversations.user_id==user_id).all()

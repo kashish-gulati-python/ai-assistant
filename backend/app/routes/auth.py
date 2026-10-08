@@ -18,7 +18,7 @@ def login(request: LoginUserRequest, db: Session=Depends(get_db)):
     return user
 
 @router.get("/me", response_model=MeResponse)
-def retrieve(current_user: Users=Depends(get_current_user)):
+def get_profile(current_user: Users=Depends(get_current_user)):
     return MeResponse(
         user_id=current_user.user_id,
         name=current_user.name,

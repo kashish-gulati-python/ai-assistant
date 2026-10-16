@@ -22,7 +22,7 @@ class Conversations(Base):
 
 class Messages(Base):
     __tablename__ = "messages"
-    convesation_id = Column(Uuid, primary_key=True, index=True)
+    conversation_id = Column(Uuid, primary_key=True, index=True)
     id = Column(Uuid, nullable=False)
     role = Column(String, nullable=False)
     content = Column(String, nullable=False)

@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends
-from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse
+from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, NewMessageResponse, NewMessageRequest
 from app.services.auth_service import get_current_user
 from app.models.user import Users
 from app.db.deps import get_db
 from sqlalchemy.orm import Session
-from app.services.conversations_service import add_conversation, get_all_conversation
+from app.services.conversations_service import add_conversation, get_all_conversation, add_message
+from uuid import UUID
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
@@ -25,3 +26,13 @@ def user_get_all_conversations(current_user: Users=Depends(get_current_user), db
         conversation = ConversationResponse(conversation_id=record.conversation_id, title=record.title, created_at=record.created_at)
         all_conversations.append(conversation)
     return all_conversations
+
+@router.post("/{conversation_id}/messages/", response_model=NewMessageResponse, status_code=201)
+def user_message(conversation_id: UUID, request: NewMessageRequest, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
+    message = add_message(db, request, conversation_id=conversation_id, user_id=current_user.user_id)
+    return NewMessageResponse(
+        message_id=message.message_id,
+        role=message.role,
+        content=message.content,
+        created_at=message.created_at
+    )

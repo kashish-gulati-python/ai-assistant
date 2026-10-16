@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.schemas.auth import RegisterUserRequest, RegisterUserResponse, LoginUserRequest, LoginUserResponse, MeResponse
-from app.services.auth_service import get_current_user, register_user, get_user
+from app.services.auth_service import get_current_user, register_user, get_user, get_users
 from app.db.deps import get_db
 from app.models.user import Users
 
@@ -25,3 +25,9 @@ def get_profile(current_user: Users=Depends(get_current_user)):
         email=current_user.email,
         created_at=current_user.created_at,
     )
+
+
+# Only for testing
+@router.get('/all')
+def get_all_users(db: Session=Depends(get_db)):
+    return get_users(db)

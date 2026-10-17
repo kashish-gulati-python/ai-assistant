@@ -32,4 +32,4 @@ class NewMessageResponse(BaseModel):
 	created_at: datetime
 
 class MessageResponse(NewMessageResponse):
-	pass
+	model_config = ConfigDict(from_attributes=True)

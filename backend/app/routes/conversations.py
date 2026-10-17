@@ -20,12 +20,7 @@ def user_conversation(request: NewConversationRequest, current_user: Users=Depen
 
 @router.get("/", response_model=list[ConversationResponse], status_code=200)
 def user_get_all_conversations(current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
-    conversations_list = get_all_conversation(db, current_user.user_id)
-    all_conversations = []
-    for record in conversations_list:
-        conversation = ConversationResponse(conversation_id=record.conversation_id, title=record.title, created_at=record.created_at)
-        all_conversations.append(conversation)
-    return all_conversations
+    return get_all_conversation(db, current_user.user_id)
 
 @router.post("/{conversation_id}/messages/", response_model=NewMessageResponse, status_code=201)
 def user_message(conversation_id: UUID, request: NewMessageRequest, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
@@ -39,9 +34,4 @@ def user_message(conversation_id: UUID, request: NewMessageRequest, current_user
 
 @router.get("/{conversation_id}/messages/", response_model=list[MessageResponse], status_code=200)
 def get_message_from_conversation(conversation_id: UUID, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
-    messages = get_messages(db, convesation_id=conversation_id, user_id=current_user.user_id)
-    all_messages = []
-    for message in messages:
-        message = MessageResponse(message_id=message.message_id, role=message.role, content=message.content, created_at=message.created_at)
-        all_messages.append(message)
-    return all_messages
+    return get_messages(db, convesation_id=conversation_id, user_id=current_user.user_id)

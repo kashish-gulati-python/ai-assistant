@@ -24,10 +24,12 @@ class MessageRole(str, Enum):
 
 class NewMessageRequest(BaseModel):
 	content: str
-	role: str
 
 class NewMessageResponse(BaseModel):
 	message_id: UUID
 	role: MessageRole
 	content: str
 	created_at: datetime
+
+class MessageResponse(NewMessageResponse):
+	pass

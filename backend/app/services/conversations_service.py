@@ -13,6 +13,9 @@ def add_conversation(db: Session, request: NewConversationRequest, user_id):
 def get_all_conversation(db: Session, user_id):
     return db.query(Conversations).filter(Conversations.user_id==user_id).all()
 
+def get_conversation_details(db: Session, conversation_id, user_id):
+    return db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id).first()
+
 def add_message(db: Session, request: NewMessageRequest, conversation_id, user_id):
     conversation = db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id).first()
     if conversation is None:

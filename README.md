@@ -252,10 +252,10 @@ Accept: application/json
 
 ### Response Schema:
 class ConversationDetailResponse(BaseModel):
-	id: UUID
-	role: MessageRole
-	content: str
-	created_at: datetime
+    conversation_id: UUID
+    title: str
+    created_at: datetime
+    updated_at: datetime
 
 ### Success Response:
 200 OK

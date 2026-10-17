@@ -30,8 +30,4 @@ def get_profile(current_user: Users=Depends(get_current_user)):
 # Only for testing
 @router.get('/all')
 def get_all_users(db: Session=Depends(get_db)):
-<<<<<<< HEAD
     return get_users(db)
-=======
-    return get_users(db)
->>>>>>> 0f270ed18d981bc6d770cb07a8d903005cd46388

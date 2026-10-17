@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from app.schemas.auth import RegisterUserRequest, LoginUserRequest
 from app.models.user import Users
 from app.core.security import create_access_token, decode_access_token, hash_password, verify_password
@@ -14,7 +15,11 @@ def register_user(db: Session, request: RegisterUserRequest) -> Users:
     hashed_password = hash_password(request.password)
     user = Users(name=request.name, email=request.email, password_hash=hashed_password)
     db.add(user)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Email already registered")
     db.refresh(user)
     return user
 
@@ -55,3 +60,9 @@ def get_current_user(
         raise credentials_exception
 
     return user
+
+
+# Only for testing
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(Users).all()
+    return users

@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
-from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, ConversationDetailResponse, NewMessageResponse, NewMessageRequest, MessageResponse
+from fastapi import APIRouter, Depends, HTTPException
+from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, ConversationDetailResponse, ConversationDeleteResponse, NewMessageResponse, NewMessageRequest, MessageResponse
 from app.services.auth_service import get_current_user
-from app.services.conversations_service import add_conversation, get_all_conversation, get_conversation_details, add_message, get_messages
+from app.services.conversations_service import add_conversation, get_all_conversation, get_conversation_details, soft_delete_conversation, add_message, get_messages
 from app.models.user import Users
 from app.db.deps import get_db
 from sqlalchemy.orm import Session
@@ -15,7 +15,7 @@ def user_conversation(request: NewConversationRequest, current_user: Users=Depen
     return NewConversationResponse(
         conversation_id=conversation.conversation_id,
         title=conversation.title,
-        created_at=conversation.created_at,
+        created_at=conversation.created_at
     )
 
 @router.get("/", response_model=list[ConversationResponse], status_code=200)
@@ -35,6 +35,13 @@ def user_message(conversation_id: UUID, request: NewMessageRequest, current_user
 @router.get("/{conversation_id}/", response_model=ConversationDetailResponse, status_code=200)
 def retrieve_conversation(conversation_id: UUID, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
     return get_conversation_details(conversation_id=conversation_id, db=db, user_id=current_user.user_id)
+
+@router.delete("/{conversation_id}/", response_model=ConversationDeleteResponse, status_code=200)
+def delete_user_conversation(conversation_id: UUID, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
+    success = soft_delete_conversation(conversation_id=conversation_id, db=db, user_id=current_user.user_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return ConversationDeleteResponse(id=conversation_id, deleted=success)
 
 @router.get("/{conversation_id}/messages/", response_model=list[MessageResponse], status_code=200)
 def get_message_from_conversation(conversation_id: UUID, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):

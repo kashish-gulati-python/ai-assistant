@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.schemas.conversations import NewConversationRequest, NewMessageRequest
 from app.models.conversations import Conversations, Messages
 from fastapi import HTTPException
+from datetime import datetime, timezone
 
 def add_conversation(db: Session, request: NewConversationRequest, user_id):
     conversation = Conversations(user_id=user_id, title=request.title)
@@ -14,7 +15,19 @@ def get_all_conversation(db: Session, user_id):
     return db.query(Conversations).filter(Conversations.user_id==user_id).all()
 
 def get_conversation_details(db: Session, conversation_id, user_id):
-    return db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id).first()
+    return db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id, Conversations.deleted_at.is_(None)).first()
+
+def soft_delete_conversation(db: Session, conversation_id, user_id) -> bool:
+    now = datetime.now(timezone.utc)
+    conversation = db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id, Conversations.deleted_at.is_(None)).first()
+    if conversation is None:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+    conversation.deleted_at = now
+
+    db.query(Messages).filter(Messages.conversation_id == conversation_id, Messages.deleted_at.is_(None)).\
+            update({Messages.deleted_at: now}, synchronize_session=False)
+    db.commit()
+    return True
 
 def add_message(db: Session, request: NewMessageRequest, conversation_id, user_id):
     conversation = db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id).first()
@@ -27,7 +40,5 @@ def add_message(db: Session, request: NewMessageRequest, conversation_id, user_i
     return message
 
 def get_messages(db: Session, convesation_id, user_id):
-    print(db.query(Messages).join(Conversations, Messages.conversation_id==Conversations.conversation_id).\
-                filter(Conversations.conversation_id==convesation_id, Conversations.user_id==user_id).all())
     return db.query(Messages).join(Conversations, Messages.conversation_id==Conversations.conversation_id).\
-                filter(Conversations.conversation_id==convesation_id, Conversations.user_id==user_id).all()
+                filter(Conversations.conversation_id==convesation_id, Conversations.user_id==user_id, Messages.deleted_at.is_(None)).all()

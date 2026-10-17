@@ -15,6 +15,7 @@ class ConversationResponse(BaseModel):
 	conversation_id: UUID
 	title: str
 	created_at: datetime
+	deleted_at: datetime | None
 
 	model_config = ConfigDict(from_attributes=True)
 
@@ -23,6 +24,10 @@ class ConversationDetailResponse(BaseModel):
     title: str
     created_at: datetime
     updated_at: datetime
+
+class ConversationDeleteResponse(BaseModel):
+	id: UUID
+	deleted: bool
 
 class MessageRole(str, Enum):
     USER = "user"

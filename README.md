@@ -1,4 +1,4 @@
-# AI Assistant — v0.1
+# AI Assistant — v0.1 -- completed
 
 v0.1 scope is: "user can sign up, log in, start a conversation, send messages, and see history"
 
@@ -161,6 +161,9 @@ class NewConversationResponse(BaseModel):
 	conversation_id: UUID
 	title: str
 	created_at: datetime
+	deleted_at: datetime | None
+
+	model_config = ConfigDict(from_attributes=True)
 
 ### Success Response:
 200 OK

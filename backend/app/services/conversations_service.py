@@ -22,9 +22,12 @@ def add_message(db: Session, request: NewMessageRequest, conversation_id, user_i
     db.commit()
     db.refresh(message)
     return message
+<<<<<<< HEAD
 
 def get_messages(db: Session, convesation_id, user_id):
     print(db.query(Messages).join(Conversations, Messages.conversation_id==Conversations.conversation_id).\
                 filter(Conversations.conversation_id==convesation_id, Conversations.user_id==user_id).all())
     return db.query(Messages).join(Conversations, Messages.conversation_id==Conversations.conversation_id).\
                 filter(Conversations.conversation_id==convesation_id, Conversations.user_id==user_id).all()
+=======
+>>>>>>> 0f270ed18d981bc6d770cb07a8d903005cd46388

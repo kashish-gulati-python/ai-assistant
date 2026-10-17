@@ -22,4 +22,8 @@ class Messages(Base):
     content: Mapped[str] = mapped_column(String)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC))
+<<<<<<< HEAD
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+=======
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+>>>>>>> 0f270ed18d981bc6d770cb07a8d903005cd46388

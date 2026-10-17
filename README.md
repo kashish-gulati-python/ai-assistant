@@ -7,8 +7,8 @@ v0.1 scope is: "user can sign up, log in, start a conversation, send messages, a
 2. User login/logout
 3. Create conversation
 4. Send message
-5. Assistant echoes message
-6. View conversation history
+5. View conversation history
+6. Delete conversation
 
 ## Non Goals:
 1. No LLM
@@ -33,7 +33,7 @@ message_id (PK) , conversation_id (FK) , role , content , created_at , updated_a
 
 | users  | conversations | messages |
 | ------------- |:-------------:|:-------------:|
-| id      | id    | id    |
+| user_id      | conversation_id    | message_id    |
 | name      | user_id     | conversation_id    |
 | email      | title     | role    |
 | password_hash    | created_at    | content    |
@@ -44,9 +44,10 @@ message_id (PK) , conversation_id (FK) , role , content , created_at , updated_a
 ## Indexes:
 - INDEX conversations(user_id)
 - INDEX messages(conversation_id)
+- INDEX messages(message_id)
 
 ## Testing Plan:
-Backend APIs will be tested using pytest and FastAPI TestClient with integration tests against a PostgreSQL test database.
+Backend APIs will be tested against a PostgreSQL test database.
 
 ## API Endpoints:
 ### POST /auth/register

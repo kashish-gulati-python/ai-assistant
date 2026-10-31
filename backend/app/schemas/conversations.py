@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from uuid import UUID
 from datetime import datetime
 
@@ -34,7 +34,13 @@ class MessageRole(str, Enum):
     ASSISTANT = "assistant"
 
 class NewMessageRequest(BaseModel):
-	content: str
+	content: str = Field(
+        ...,
+        min_length=1,
+        description="Message content cannot be empty",
+    )
+	
+	model_config = ConfigDict(str_strip_whitespace=True)
 
 class NewMessageResponse(BaseModel):
 	message_id: UUID
@@ -44,3 +50,21 @@ class NewMessageResponse(BaseModel):
 
 class MessageResponse(NewMessageResponse):
 	model_config = ConfigDict(from_attributes=True)
+
+class GenerationStatus(str, Enum):
+	COMPLETED = "completed"
+	FAILED = "failed"
+	PENDING = "pending"
+
+class ErrorDetail(BaseModel):
+	code: str
+	message: str
+
+class MessageGenerationResponse(BaseModel):
+	user_message: MessageResponse
+	assistant_message: MessageResponse | None = None
+	generation_status: GenerationStatus
+	error: ErrorDetail | None = None
+
+	model_config = ConfigDict(from_attributes=True)
+

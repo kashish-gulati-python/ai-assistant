@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, ConversationDetailResponse, ConversationDeleteResponse, NewMessageResponse, NewMessageRequest, MessageResponse
+from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, ConversationDetailResponse, ConversationDeleteResponse, NewMessageResponse, NewMessageRequest, MessageResponse, MessageGenerationResponse
 from app.services.auth_service import get_current_user
 from app.services.conversations_service import add_conversation, get_all_conversation, get_conversation_details, soft_delete_conversation, add_message, get_messages
 from app.models.user import Users
@@ -22,15 +22,9 @@ def user_conversation(request: NewConversationRequest, current_user: Users=Depen
 def user_get_all_conversations(current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
     return get_all_conversation(db, current_user.user_id)
 
-@router.post("/{conversation_id}/messages/", response_model=NewMessageResponse, status_code=201)
+@router.post("/{conversation_id}/messages/", response_model=MessageGenerationResponse, status_code=201)
 def user_message(conversation_id: UUID, request: NewMessageRequest, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):
-    message = add_message(db, request, conversation_id=conversation_id, user_id=current_user.user_id)
-    return NewMessageResponse(
-        message_id=message.message_id,
-        role=message.role,
-        content=message.content,
-        created_at=message.created_at
-    )
+    return add_message(db, request, conversation_id=conversation_id, user_id=current_user.user_id)
 
 @router.get("/{conversation_id}/", response_model=ConversationDetailResponse, status_code=200)
 def retrieve_conversation(conversation_id: UUID, current_user: Users=Depends(get_current_user), db: Session=Depends(get_db)):

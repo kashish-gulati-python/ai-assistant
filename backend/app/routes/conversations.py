@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, ConversationDetailResponse, ConversationDeleteResponse, NewMessageResponse, NewMessageRequest, MessageResponse, MessageGenerationResponse
-from app.services.auth_service import get_current_user
+from app.dependencies.auth import get_current_user
 from app.services.conversations_service import add_conversation, get_all_conversation, get_conversation_details, soft_delete_conversation, add_message, get_messages
 from app.models.user import Users
 from app.db.deps import get_db

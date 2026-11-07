@@ -33,7 +33,7 @@ def get_user(db: Session, request: LoginUserRequest) -> dict[str, str]:
     return {"access_token": access_token, "token_type": "bearer"}
 
 def get_users(db: Session):
-    return db.query(Users).first()
+    return db.query(Users).all()
 
 def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
@@ -60,9 +60,3 @@ def get_current_user(
         raise credentials_exception
 
     return user
-
-
-# Only for testing
-def get_users(db: Session = Depends(get_db)):
-    users = db.query(Users).all()
-    return users

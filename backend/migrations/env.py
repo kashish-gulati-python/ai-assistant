@@ -3,11 +3,11 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
+import app.models.user  # noqa: F401 — registers models with Base
 from alembic import context
 
 # Import Base and all models so autogenerate can detect schema changes
 from app.db.base import Base
-import app.models.user  # noqa: F401 — registers models with Base
 
 config = context.config
 

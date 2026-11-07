@@ -1,7 +1,9 @@
-from typing import Annotated
-from pydantic import BaseModel, EmailStr, StringConstraints, field_validator
-from uuid import UUID
 from datetime import datetime
+from typing import Annotated
+from uuid import UUID
+
+from pydantic import BaseModel, EmailStr, StringConstraints, field_validator
+
 
 class RegisterUserRequest(BaseModel):
     name: Annotated[str, StringConstraints(min_length=3, max_length=50, strip_whitespace=True)]

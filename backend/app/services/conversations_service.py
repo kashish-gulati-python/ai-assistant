@@ -1,8 +1,18 @@
-from sqlalchemy.orm import Session
-from app.schemas.conversations import NewConversationRequest, NewMessageRequest, MessageGenerationResponse, GenerationStatus, ErrorDetail
-from app.models.conversations import Conversations, Messages
+from datetime import UTC, datetime
+
 from fastapi import HTTPException
-from datetime import datetime, timezone
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
+
+from app.models.conversations import Conversations, Messages
+from app.schemas.conversations import (
+    ErrorDetail,
+    GenerationStatus,
+    MessageGenerationResponse,
+    NewConversationRequest,
+    NewMessageRequest,
+)
+
 
 def add_conversation(db: Session, request: NewConversationRequest, user_id):
     conversation = Conversations(user_id=user_id, title=request.title)
@@ -18,7 +28,7 @@ def get_conversation_details(db: Session, conversation_id, user_id):
     return db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id, Conversations.deleted_at.is_(None)).first()
 
 def soft_delete_conversation(db: Session, conversation_id, user_id) -> bool:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     conversation = db.query(Conversations).filter(Conversations.conversation_id==conversation_id, Conversations.user_id==user_id, Conversations.deleted_at.is_(None)).first()
     if conversation is None:
             raise HTTPException(status_code=404, detail="Conversation not found")
@@ -45,16 +55,12 @@ def add_message(db: Session, request: NewMessageRequest, conversation_id, user_i
         db.add(user_message)
         db.commit()
         db.refresh(user_message)
-    except Exception as e:
+    except SQLAlchemyError as e:
         db.rollback()
         raise HTTPException(status_code=500, detail="Failed to save user message") from e
     
     # Generate Echo Message (Situation: Echo fails)
-    try:
-        reply_content = echo_message(request.content)
-    except Exception as e:
-        return MessageGenerationResponse(user_message=user_message, assistant_message=None, generation_status=GenerationStatus.FAILED,
-            error=ErrorDetail(code="ECHO_GENERATION_FAILED", message=f"Failed to generate echo response."))
+    reply_content = echo_message(request.content)
 
     # Insert Assistant Message (Situation: DB insert fails)
     assistant_message = Messages(conversation_id=conversation_id, role="assistant", content=reply_content)
@@ -62,10 +68,10 @@ def add_message(db: Session, request: NewMessageRequest, conversation_id, user_i
         db.add(assistant_message)
         db.commit()
         db.refresh(assistant_message)
-    except Exception as exc:
+    except SQLAlchemyError:
         db.rollback()
         return MessageGenerationResponse(user_message=user_message, assistant_message=None, generation_status=GenerationStatus.FAILED,
-            error=ErrorDetail(code="ASSISTANT_PERSISTENCE_FAILED", message=f"Failed to persist assistant response."))
+            error=ErrorDetail(code="ASSISTANT_PERSISTENCE_FAILED", message="Failed to persist assistant response."))
 
     # Success (Situation: Echo succeeds)
     return MessageGenerationResponse(user_message=user_message, assistant_message=assistant_message, generation_status=GenerationStatus.COMPLETED,

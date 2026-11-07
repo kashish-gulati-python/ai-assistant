@@ -1,9 +1,12 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import String, DateTime, ForeignKey
-from app.db.base import Base
-from datetime import datetime, UTC
 import uuid
+from datetime import UTC, datetime
+
+from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db.base import Base
+
 
 class Conversations(Base):
     __tablename__ = "conversations"

@@ -1,9 +1,11 @@
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-from app.schemas.auth import RegisterUserRequest, LoginUserRequest
-from app.models.user import Users
-from app.core.security import create_access_token, hash_password, verify_password
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+
+from app.core.security import create_access_token, hash_password, verify_password
+from app.models.user import Users
+from app.schemas.auth import LoginUserRequest, RegisterUserRequest
+
 
 def register_user(db: Session, request: RegisterUserRequest) -> Users:
     hashed_password = hash_password(request.password)

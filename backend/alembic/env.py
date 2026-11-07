@@ -7,14 +7,13 @@ from alembic import context
 
 # Import Base and all models so autogenerate can detect schema changes
 from app.db.base import Base
-import app.models.user
-import app.models.conversations
 
 config = context.config
 
 # Override sqlalchemy.url from environment variable if set
-from dotenv import load_dotenv
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(BASE_DIR / ".env")

@@ -1,12 +1,13 @@
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi import Depends, HTTPException, status
-from jose import JWTError
 from uuid import UUID
-from app.db.deps import get_db
-from app.core.security import decode_access_token
-from sqlalchemy.orm import Session
-from app.models.user import Users
 
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError
+from sqlalchemy.orm import Session
+
+from app.core.security import decode_access_token
+from app.db.deps import get_db
+from app.models.user import Users
 
 security = HTTPBearer(auto_error=False)
 

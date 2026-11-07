@@ -1,9 +1,10 @@
-from passlib.context import CryptContext
-from datetime import datetime, UTC, timedelta
-from jose import jwt, JWTError
 import os
-from dotenv import load_dotenv
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+from dotenv import load_dotenv
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parents[2]   # backend/

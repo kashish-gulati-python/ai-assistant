@@ -1,11 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException
-from app.schemas.conversations import NewConversationResponse, NewConversationRequest, ConversationResponse, ConversationDetailResponse, ConversationDeleteResponse, NewMessageResponse, NewMessageRequest, MessageResponse, MessageGenerationResponse
-from app.dependencies.auth import get_current_user
-from app.services.conversations_service import add_conversation, get_all_conversation, get_conversation_details, soft_delete_conversation, add_message, get_messages
-from app.models.user import Users
-from app.db.deps import get_db
-from sqlalchemy.orm import Session
 from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from app.db.deps import get_db
+from app.dependencies.auth import get_current_user
+from app.models.user import Users
+from app.schemas.conversations import (
+    ConversationDeleteResponse,
+    ConversationDetailResponse,
+    ConversationResponse,
+    MessageGenerationResponse,
+    MessageResponse,
+    NewConversationRequest,
+    NewConversationResponse,
+    NewMessageRequest,
+)
+from app.services.conversations_service import (
+    add_conversation,
+    add_message,
+    get_all_conversation,
+    get_conversation_details,
+    get_messages,
+    soft_delete_conversation,
+)
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 

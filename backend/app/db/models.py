@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Uuid, String, DateTime, Integer
-from app.db.database import Base
 import uuid
+
+from app.db.database import Base
+from sqlalchemy import Column, DateTime, Integer, String, Uuid
+
 
 class Users(Base):
     __tablename__ = "users"

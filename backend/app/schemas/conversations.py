@@ -1,7 +1,9 @@
-from enum import Enum
-from pydantic import BaseModel, ConfigDict, Field
-from uuid import UUID
 from datetime import datetime
+from enum import Enum
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, Field
+
 
 class NewConversationRequest(BaseModel):
 	title: str
